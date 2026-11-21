@@ -314,6 +314,7 @@
 
 
 
+
 const port = process.env.PORT || 4000;
 
 const express = require("express");
@@ -378,6 +379,7 @@ app.get("/", (req, res) => {
 
 app.post("/upload", upload.single("product"), async (req, res) => {
     try {
+        // Check image
         if (!req.file) {
             return res.status(400).json({
                 success: false,
@@ -385,6 +387,16 @@ app.post("/upload", upload.single("product"), async (req, res) => {
             });
         }
 
+        // Check Cloudinary credentials
+        if (
+            !process.env.CLOUDINARY_CLOUD_NAME ||
+            !process.env.CLOUDINARY_API_KEY ||
+            !process.env.CLOUDINARY_API_SECRET
+        ) {
+            throw new Error("Cloudinary credentials missing");
+        }
+
+        // Upload image
         const result = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream(
                 {
@@ -393,28 +405,28 @@ app.post("/upload", upload.single("product"), async (req, res) => {
                 },
                 (error, result) => {
                     if (error) {
-                        reject(error);
-                    } else {
-                        resolve(result);
+                        return reject(error);
                     }
+                    resolve(result);
                 }
             ).end(req.file.buffer);
         });
 
-        res.json({
+        return res.status(200).json({
             success: 1,
             image_url: result.secure_url
         });
 
     } catch (error) {
-        console.error("Cloudinary Upload Error:", error);
+        console.error("CLOUDINARY ERROR:", error);
 
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
-            message: "Image upload failed"
+            message: error.message
         });
     }
 });
+
 
 // =================================
 // PRODUCT SCHEMA
