@@ -19,7 +19,7 @@ const LoginSignup = () => {
     console.log("login Function Executed",formData);
     // getting the data an input field
     let responseData;
-    await fetch('http://localhost:4000/login',{
+    await fetch('https://ecommerce-us-node-full-stack-omun.vercel.app/login',{
       method:'POST',
       headers:{
         Accept:'application/form-data',
@@ -42,7 +42,7 @@ const LoginSignup = () => {
     console.log("Signup Function Executed",formData)
     // getting the data an input field
     let responseData;
-    await fetch('http://localhost:4000/signup',{
+    await fetch('https://ecommerce-us-node-full-stack-omun.vercel.app/signup',{
       method:'POST',
       headers:{
         Accept:'application/form-data',
