@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './Popular.css'
 import Item from '../Items/Item'
-import { useSearchParams } from 'react-router-dom'
+
 
 const Popular = () => {
 
